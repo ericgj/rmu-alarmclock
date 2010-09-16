@@ -1,5 +1,5 @@
 # TODO config APPENV with external file
-APPENV = { 'host' => 'localhost',
+APPENV = { 'host' => '127.0.0.1',
            'port' => 5544
          }
 
@@ -9,12 +9,11 @@ APPENV = { 'host' => 'localhost',
 module CLI
 
   def self.parse(*args)
-    msg = Reminder.new( {
-                   'duration' => args.shift,
-                   'message'  => args.join(' '),
-                   'created_at' => Time.now
-                  }
-                ).to_json
+    h = {}
+    h['duration'] = arg0           if (arg0 = args.shift)
+    h['message'] = args.join(' ')  unless args.empty?
+    h['created_at'] = Time.now
+    msg = Reminder.new(h).to_json
   end
   
   def self.run(*args)

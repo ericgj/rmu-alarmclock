@@ -1,30 +1,26 @@
 require 'json'
 
-class Reminder
+class Reminder < Struct.new(:created_at, :start_at, :duration, :message)
 
-  attr_reader :created_at, :start_at, :duration, :message
-
+  DEFAULT = { 'duration'   => 0,
+              'message'    => 'Here\'s your wake-up call!!'
+            }
+            
   def seconds_remaining  
-    @duration - (Time.now - @start_at)
+    duration - (Time.now - start_at)
   end
   
   def initialize(hash)
-    @created_at =  hash['created_at']
-    @start_at   =  hash['start_at'] || hash['created_at']
-    @duration   =  hash['duration']
-    @message    =  hash['message'] || default_message
+    hash = hash.merge(DEFAULT)
+    hash['created_at'] ||= Time.now
+    hash['start_at']   ||= hash['created_at']
+    hash.each_pair {|k,v| self.__send__("#{k}=".to_sym, v)}
   end
-  
-  def default_message
-    'Here\'s your wake-up call!!'
-  end
-  
+ 
   def to_h
-    { 'created_at' => @created_at,
-      'start_at' => @start_at,
-      'duration' => @duration,
-      'message' => @message
-    }
+    hash = {}
+    each_pair {|k, v| hash[k] = v}
+    hash
   end
   
   def to_json
