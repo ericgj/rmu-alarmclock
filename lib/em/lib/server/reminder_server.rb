@@ -41,10 +41,10 @@ module ReminderServer
   end
   
   def schedule reminder
-    if (d = reminder.seconds_remaining) > 0
+    d = [reminder.seconds_remaining, 0.1].max
+    if @each_reminder_callback
       EM.add_timer(d) do
-        @each_reminder_callback.call(reminder) \
-          if @each_reminder_callback
+        @each_reminder_callback.call(reminder)
       end
     end
   end
