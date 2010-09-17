@@ -29,7 +29,7 @@ module CLI
     end
     
     def post_init
-      send_data msg
+      send_data @msg
       close_connection_after_writing
     end
     
