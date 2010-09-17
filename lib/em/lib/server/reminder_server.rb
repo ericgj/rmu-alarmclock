@@ -1,8 +1,8 @@
 require 'eventmachine'
+require 'json'
+require 'json/add/core'
 
 module ReminderServer
-  
-  require 'json'
   
   def post_init
     @buffer = BufferedTokenizer.new("\r")
@@ -10,6 +10,10 @@ module ReminderServer
   
   def unparseable_command(&blk)
     @unparseable_command_callback = blk
+  end
+  
+  def invalid_message(&blk)
+    @invalid_message_callback = blk
   end
   
   def each_reminder(&blk)
@@ -30,9 +34,12 @@ module ReminderServer
       begin
         schedule(parse(line))
       rescue
-        @unparseable_command_callback.call(@buffer) \
+        @unparseable_command_callback.call(line) \
           if @unparseable_command_callback
       end
+    else
+      @invalid_message_callback.call(line) \
+        if @invalid_message_callback
     end
   end
   

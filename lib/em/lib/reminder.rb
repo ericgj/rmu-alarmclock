@@ -1,4 +1,5 @@
 require 'json'
+require 'json/add/core'
 
 class Reminder < Struct.new(:created_at, :start_at, :duration, :message)
 

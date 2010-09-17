@@ -5,4 +5,5 @@ require 'bundler'
 Bundler.setup(:test)
 
 require 'bacon'
+require 'baconmocha'
 Bacon.summary_on_exit

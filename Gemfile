@@ -1,6 +1,9 @@
 source "http://gems.rubyforge.org"
 
-gem 'eventmachine'
+group :em do
+  gem 'eventmachine'
+  gem 'json'
+end
 
 group :test do
   gem 'bacon'
