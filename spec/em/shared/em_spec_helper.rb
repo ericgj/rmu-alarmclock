@@ -106,24 +106,40 @@ module EmSpecHelper
     def proxy_target_unbound; end
     
   end
-  
-  #
-  # These are designed to run a dummy server in a separate thread
-  # For testing within the EM reactor instead of stubbing it
-  #
-  def self.start_server_thread(klass, host, port)
-    Thread.new {
-      EM.run {
-          EM.start_server(host, port, klass)
-        }
-    }
-  end
-  
-  def self.stop_server_thread(th)
-    th.wakeup
-    EM.stop
-  end
 
+
+  class << self
+    #
+    # These are designed to run a dummy server in a separate thread
+    # For testing within the EM reactor instead of stubbing it
+    #
+    def start_server_thread(klass, host, port)
+      Thread.new {
+        EM.run {
+            EM.start_server(host, port, klass)
+          }
+      }
+    end
+      
+    def stop_thread(th)
+      th.wakeup
+      EM.stop
+    end
+
+    def stop_server_thread(th); stop_thread(th); end
+    def stop_connect_thread(th); th.wakeup; end
+
+    def start_connect_thread(klass, host, port, data)
+      Thread.new {
+        EM.run {
+          EM.connect(host, port, klass, data)
+          EM.next_tick { EM.stop }
+        }
+      }
+    end
+    
+  end
+    
   module DummyServer
     
     def initialize
@@ -141,4 +157,17 @@ module EmSpecHelper
     
   end
 
+  module DummyClient
+  
+    def initialize(msg)
+      @msg = msg
+    end
+    
+    def post_init
+      send_data @msg
+      close_connection_after_writing
+    end
+    
+  end
+  
 end

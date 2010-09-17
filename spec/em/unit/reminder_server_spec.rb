@@ -11,7 +11,7 @@ module EventMachine
   end
 end
 
-describe 'ReminderServer', 'valid command' do
+describe 'ReminderServer', 'receives valid command' do
 
   it 'should throw each_reminder with reminder matching received message' do
 
@@ -34,14 +34,44 @@ describe 'ReminderServer', 'valid command' do
    
 end
 
-describe 'ReminderServer', 'invalid message format' do
+describe 'ReminderServer', 'receives unparseable command' do
 
-  it('should throw invalid_message with message') { should.flunk 'Not yet implemented' }
+  it 'should throw unparseable_command with message' do
+    @reminder = {'hello' => 'world', 
+                 'unparseable' => 'message', 
+                 'created_at' => Time.now}.to_json
+    EmSpecHelper.stub_connection(ReminderServer) do |conn|
+      conn.each_reminder do |r|
+        should.flunk "Command parsed: #{r.to_json}"
+      end
+      conn.unparseable_command do |cmd|
+        cmd.chomp.should.eql @reminder.chomp
+      end
+      conn.invalid_message do |msg|
+        should.flunk "Command unparseable: #{cmd}"
+      end
+      conn.receive_data(@reminder + "\n\r")
+    end
+  end
   
 end
 
-describe 'ReminderServer', 'unparseable command' do
+describe 'ReminderServer', 'receives invalid message format' do
 
-  it('should throw unparseable_command with message') { should.flunk 'Not yet implemented' }
+  it 'should throw invalid_message with message' do
+    @reminder = "invalid message"
+    EmSpecHelper.stub_connection(ReminderServer) do |conn|
+      conn.each_reminder do |r|
+        should.flunk "Command parsed: #{r.to_json}"
+      end
+      conn.unparseable_command do |cmd|
+        should.flunk "Command unparseable: #{cmd}"
+      end
+      conn.invalid_message do |msg|
+        msg.chomp.should.eql @reminder.chomp
+      end
+      conn.receive_data(@reminder + "\n\r")
+    end
+  end
   
 end

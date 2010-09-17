@@ -4,6 +4,10 @@ require 'json/add/core'
 
 module ReminderServer
   
+  def self.start(host, port)
+    EM.start_server(host, port, self)
+  end
+  
   def post_init
     @buffer = BufferedTokenizer.new("\r")
   end
