@@ -11,7 +11,7 @@ describe 'CLI', 'run' do
     before do
       @server_thread = EmSpecHelper.start_server_thread(
                          EmSpecHelper::DummyServer,
-                         APPENV['host'], APPENV['port']
+                         'localhost', 5544
                        )
     end
     
@@ -22,7 +22,7 @@ describe 'CLI', 'run' do
     it 'should run without errors' do
       @client_thread = Thread.current
       EM.run {
-        EM.next_tick { CLI.run }
+        EM.next_tick { CLI.run('localhost', 5544) }
         @client_thread.wakeup
         true.should.eql true
       }

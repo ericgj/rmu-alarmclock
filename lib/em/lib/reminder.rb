@@ -11,7 +11,7 @@ class Reminder < Struct.new(:created_at, :start_at, :duration, :message, :timer_
     duration - (Time.now - start_at)
   end
   
-  def initialize(hash)
+  def initialize(hash = {})
     hash = hash.merge(DEFAULT)
     hash['created_at'] ||= Time.now
     hash['start_at']   ||= hash['created_at']

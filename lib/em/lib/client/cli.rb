@@ -1,31 +1,29 @@
-# TODO config APPENV with external file
-APPENV = { 'host' => '127.0.0.1',
-           'port' => 5544
-         }
+require 'json'
+require 'json/add/core'
 
 # Usage:
-#  CLI.run(ARGV)
+#  CLI.run(host, port, ARGV)
 
 module CLI
-
+  
   def self.parse(*args)
     h = {}
     h['duration'] = arg0           if (arg0 = args.shift)
     h['message'] = args.join(' ')  unless args.empty?
     h['created_at'] = Time.now
-    msg = Reminder.new(h).to_json
+    msg = Reminder.new(h)
   end
   
-  def self.run(*args)
+  def self.run(host, port, *args)
     EM.run { 
-      EM.connect APPENV['host'], APPENV['port'], ReminderClient, CLI.parse(*args)
+      EM.connect host, port, ReminderClient, CLI.parse(*args)
     }
   end
   
   module ReminderClient
 
     def initialize(reminder)
-      @msg = reminder
+      @msg = reminder.to_json + "\n\r"
     end
     
     def post_init

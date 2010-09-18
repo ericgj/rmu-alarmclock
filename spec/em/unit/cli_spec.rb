@@ -29,25 +29,29 @@ end
 
 describe 'CLI::ReminderClient' do
     
+  before do
+    @reminder = Reminder.new
+  end
+  
   it 'it should call send_data with the initial data in post_init' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, "data", 
+                CLI::ReminderClient, @reminder, 
                 :stubs => Proc.new { |stub|
-                             stub.expects(:send_data).with("data").once
+                             stub.expects(:send_data).with(@reminder.to_json + "\n\r").once
                            }
                )
   end
   
   it 'it should call close_connection_after_writing in post_init' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, "data", 
+                CLI::ReminderClient, @reminder, 
                 :stubs => :close_connection_after_writing
                )
   end
   
   it 'should stop the EM reactor when unbinding' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, "data"
+                CLI::ReminderClient, @reminder
                ) { |conn|  EM.expects(:stop); conn.unbind }
   end
   
