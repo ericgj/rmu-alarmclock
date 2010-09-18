@@ -4,8 +4,8 @@ require 'json/add/core'
 
 module ReminderServer
   
-  def self.start(host, port)
-    EM.start_server(host, port, self)
+  def self.start(host, port, &blk)
+    EM.start_server(host, port, self, &blk)
   end
   
   def post_init

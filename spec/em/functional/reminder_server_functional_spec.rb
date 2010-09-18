@@ -7,7 +7,7 @@ require 'lib/em/lib/server/reminder_server'
 
 describe 'ReminderServer', 'receives valid command' do
 
-  it 'should throw reminder near the specified time' do
+  it 'should throw reminder near the specified time (3 sec)' do
     
     @host = 'localhost'; @port = 5544
     @start_time = Time.now
@@ -15,25 +15,36 @@ describe 'ReminderServer', 'receives valid command' do
     
     @th = Thread.current
     EM.run {
-      server = ReminderServer.start(@host, @port)
-      
-      server.each_reminder do |r|
-        @th.wakeup
-        r.should.eql @reminder
-        @start_time.should.
-          satisfy('near') { |t| (Time.now - t).between?(3.1, 3.2) }
-      end
     
-      server.unparseable_command do |cmd|
-        @th.wakeup
-        puts "unparseable: #{cmd}"
-      end
+      ReminderServer.start(@host, @port) do |server|
+        
+        server.each_reminder do |r|
+          @th.wakeup
+          now = Time.now
+          r.should.eql @reminder
+          $stdout.print "\n    Note: reminder received in #{now - @start_time} seconds.\n"
+          $stdout.flush
+          now.should.
+            satisfy("Not near specified time (delta=#{now - @reminder.start_at}") do |t| 
+              (t - @reminder.start_at).between?(-0.1, 0.1)
+            end
+          EM.next_tick { EM.stop }
+        end
       
-      server.invalid_message do |msg|
-        @th.wakeup
-        puts "invalid: #{msg}"
-      end
-      
+        server.unparseable_command do |cmd|
+          @th.wakeup
+          should.flunk "Received unparseable: #{cmd}"
+          EM.next_tick { EM.stop }
+        end
+        
+        server.invalid_message do |msg|
+          @th.wakeup
+          should.flunk "Received invalid: #{msg}"
+          EM.next_tick { EM.stop }
+        end
+     
+     end
+     
       # sends data on a different thread and disconnects, 
       # mimicking an EM reactor running in a separate process
       EmSpecHelper.start_connect_thread(
@@ -44,7 +55,8 @@ describe 'ReminderServer', 'receives valid command' do
       
     }
     
-    #EmSpecHelper.stop_connect_thread(@th)
+    #### Note this not needed -- thread is killed when EM.stop
+    # EmSpecHelper.stop_connect_thread(@th)
     
   end
   

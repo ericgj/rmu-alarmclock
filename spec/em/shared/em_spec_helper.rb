@@ -121,19 +121,18 @@ module EmSpecHelper
       }
     end
       
-    def stop_thread(th)
+    def stop_server_thread(th)
       th.wakeup
       EM.stop
     end
 
-    def stop_server_thread(th); stop_thread(th); end
     def stop_connect_thread(th); th.wakeup; end
 
     def start_connect_thread(klass, host, port, data)
       Thread.new {
         EM.run {
           EM.connect(host, port, klass, data)
-          EM.next_tick { EM.stop }
+          #EM.next_tick { EM.stop }
         }
       }
     end

@@ -5,29 +5,43 @@ APPENV = { 'host' => 'localhost',
            'alarm-port' => 5545
          }
          
-module SimpleAlarmClient
-  
-  def initialize(reminder)
-    @reminder = reminder
-  end
-  
-  def post_init
-    send_data @reminder.to_json
-  end
-  
-end
 
 EM.run {
 
-  server = EM.start_server(APPENV['host'], APPENV['port'], ReminderServer)
-  
-  server.unparseable_command do |cmd|
-    $stdout.print "Unparseable command received: `#{cmd}`\n"
-    $stdout.flush
-  end
-  
-  server.each_reminder do |reminder|
-    EM.connect(APPENV['alarm-host'], APPENV['alarm-port'], SimpleAlarmClient, reminder)
+  ReminderServer.start(APPENV['host'], APPENV['port']) do |server|
+    
+    server.each_reminder do |reminder|
+    
+      alarm = SimpleAlarmClient.connect(
+                APPENV['alarm-host'], APPENV['alarm-port'], 
+                reminder
+              )
+
+      alarm.snooze do |response|
+        # TODO handle snooze response
+        # by sending new reminder that sets a periodic timer unless
+        # already set
+      end
+      
+      alarm.off do |response|
+        # TODO handle off response
+        # by setting off periodic timer identified by timer_id
+      end
+            
+    end
+    
+    # TODO these error conditions
+    # should be sent back to the client somehow?
+    server.unparseable_command do |cmd|
+      $stdout.print "Unparseable command received: `#{cmd}`\n"
+      $stdout.flush
+    end
+        
+    server.invalid_message do |msg|
+      $stdout.print "Invalid message received: `#{msg}`\n"
+      $stdout.flush
+    end
+    
   end
   
 }

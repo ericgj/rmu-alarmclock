@@ -1,7 +1,7 @@
 require 'json'
 require 'json/add/core'
 
-class Reminder < Struct.new(:created_at, :start_at, :duration, :message)
+class Reminder < Struct.new(:created_at, :start_at, :duration, :message, :timer_id)
 
   DEFAULT = { 'duration'   => 0,
               'message'    => 'Here\'s your wake-up call!!'
