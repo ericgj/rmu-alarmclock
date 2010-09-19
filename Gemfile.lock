@@ -5,6 +5,7 @@ GEM
     baconmocha (0.0.2)
       bacon
       mocha (>= 0.9.6)
+    daemons (1.1.0)
     eventmachine (0.12.10)
     json (1.4.6)
     mocha (0.9.8)
@@ -17,6 +18,7 @@ PLATFORMS
 DEPENDENCIES
   bacon
   baconmocha
+  daemons
   eventmachine
   json
   mocha

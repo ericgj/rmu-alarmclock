@@ -1,7 +1,7 @@
 source "http://gems.rubyforge.org"
 
 group :daemon do
-  gem :daemons
+  gem 'daemons'
 end
 
 group :em do

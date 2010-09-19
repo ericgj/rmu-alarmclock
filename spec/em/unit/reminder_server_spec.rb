@@ -1,8 +1,7 @@
 require File.join(File.dirname(__FILE__),'..','..','helper')
 require File.join(File.dirname(__FILE__),'..','helper')
 
-require 'lib/em/lib/reminder'
-require 'lib/em/lib/server/reminder_server'
+require 'lib/em/em_server'
 
 # stub EM.add_timer
 module EventMachine
