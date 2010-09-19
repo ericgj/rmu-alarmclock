@@ -7,8 +7,22 @@ class Reminder < Struct.new(:created_at, :start_at, :duration, :message, :timer_
               'message'    => 'Here\'s your wake-up call!!'
             }
             
+  def seconds_remaining_to_start
+    Time.now - start_at
+  end
+  
   def seconds_remaining  
     duration - (Time.now - start_at)
+  end
+  
+  def state
+    if seconds_remaining < 0
+      :expired 
+    elsif seconds_remaining_to_start < 0
+      :started
+    else
+      :created
+    end
   end
   
   def initialize(hash = {})
