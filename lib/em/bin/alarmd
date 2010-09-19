@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+options = { :ARGV => ARGV.split(' ') }
+
+require 'rubygems'
+require 'bundler'
+Bundle.setup(:daemons)
+require 'daemons'
+
+require File.join(File.dirname(__FILE__),'..','em_alarm')
+
+Daemons.run_proc('alarmd', options) do
+
+  Signal('INT') { EM.next_tick { EM.stop } }
+  
+  EM.run {
+    SimpleAlarmServer.start(APPENV.host, APPENV.port)
+  }
+  
+end

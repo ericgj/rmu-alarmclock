@@ -1,5 +1,9 @@
 source "http://gems.rubyforge.org"
 
+group :daemon do
+  gem :daemons
+end
+
 group :em do
   gem 'eventmachine'
   gem 'json'
