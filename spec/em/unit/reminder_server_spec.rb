@@ -20,7 +20,7 @@ describe 'ReminderServer', 'receives valid command' do
         r.should.not.be.nil
         r.each_pair {|k, v| v.should.eql @reminder[k]}
       end
-      conn.unparseable_command do |cmd|
+      conn.unparseable_message do |cmd|
         should.flunk "Command unparseable: #{cmd}"
       end
       conn.invalid_message do |msg|
@@ -43,7 +43,7 @@ describe 'ReminderServer', 'receives unparseable command' do
       conn.each_reminder do |r|
         should.flunk "Command parsed: #{r.to_json}"
       end
-      conn.unparseable_command do |cmd|
+      conn.unparseable_message do |cmd|
         cmd.chomp.should.eql @reminder.chomp
       end
       conn.invalid_message do |msg|
@@ -63,7 +63,7 @@ describe 'ReminderServer', 'receives invalid message format' do
       conn.each_reminder do |r|
         should.flunk "Command parsed: #{r.to_json}"
       end
-      conn.unparseable_command do |cmd|
+      conn.unparseable_message do |cmd|
         should.flunk "Command unparseable: #{cmd}"
       end
       conn.invalid_message do |msg|

@@ -19,7 +19,7 @@ namespace :test do
     end
     
     task :functional => ['test:setup'] do
-      puts "-----------------------\nUnit tests\n-----------------------"
+      puts "-----------------------\nFunctional tests\n-----------------------"
       Dir['spec/em/functional/**/*.rb'].each {|f| load f; puts "-----"}
     end
     

@@ -8,7 +8,7 @@ describe 'ReminderServer', 'receives valid command' do
 
   it 'should throw reminder near the specified time (3 sec)' do
     
-    @host = 'localhost'; @port = 5544
+    @host = 'localhost'; @port = 8888
     @start_time = Time.now
     @reminder = Reminder.new({"start_at" => @start_time + 3})
     
@@ -30,7 +30,7 @@ describe 'ReminderServer', 'receives valid command' do
           EM.next_tick { EM.stop }
         end
       
-        server.unparseable_command do |cmd|
+        server.unparseable_message do |cmd|
           @th.wakeup
           should.flunk "Received unparseable: #{cmd}"
           EM.next_tick { EM.stop }
