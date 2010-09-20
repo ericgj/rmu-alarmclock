@@ -1,20 +1,25 @@
 #!/usr/bin/env ruby
 
-options = { :ARGV => ARGV.split(' ') }
-
-require 'rubygems'
-require 'bundler'
-Bundle.setup(:daemons)
-require 'daemons'
+#options = { :ARGV => ARGV.split(' ') }
+#
+#require 'rubygems'
+#require 'bundler'
+#Bundle.setup(:daemons)
+#require 'daemons'
 
 require File.join(File.dirname(__FILE__),'..','em_alarm')
 
-Daemons.run_proc('alarmd', options) do
-
-  Signal('INT') { EM.next_tick { EM.stop } }
+#Daemons.run_proc('alarmd', options) do
+#
+  
+  APPENV = Remindr::Environment.load
+  APPENV.configure    # checks/dumps settings
+  
+  Signal.trap('INT') { puts "Exiting..."; EM.next_tick { EM.stop } }
   
   EM.run {
-    SimpleAlarmServer.start(APPENV.host, APPENV.port)
+    Remindr::SimpleAlarmServer.start(APPENV.alarm.host, APPENV.alarm.port)
+    puts "Alarm server listening on #{APPENV.alarm.host}:#{APPENV.alarm.port}"
   }
   
-end
+#end

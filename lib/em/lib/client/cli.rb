@@ -1,14 +1,17 @@
+require 'eventmachine'
 require 'json'
 require 'json/add/core'
 
 # Usage:
-#  CLI.run(host, port, ARGV)
+#  Remindr::CLI.run(host, port, ARGV)
 
+module Remindr
 module CLI
   
   def self.parse(*args)
+    args = args.flatten
     h = {}
-    h['duration'] = arg0           if (arg0 = args.shift)
+    h['duration'] = (args.shift).to_i
     h['message'] = args.join(' ')  unless args.empty?
     h['created_at'] = Time.now
     msg = Reminder.new(h)
@@ -16,21 +19,14 @@ module CLI
   
   def self.run(host, port, *args)
     EM.run { 
-      EM.connect host, port, ReminderClient, CLI.parse(*args)
+      msg = CLI.parse(*args)
+      EM.connect host, port, ReminderClient, msg
     }
   end
   
   module ReminderClient
+    include ::EM::Protocols::JSON::Simple::Client
 
-    def initialize(reminder)
-      @msg = reminder.to_json + "\n\r"
-    end
-    
-    def post_init
-      send_data @msg
-      close_connection_after_writing
-    end
-    
     def unbind
       EM.stop
     end
@@ -38,4 +34,4 @@ module CLI
   end
   
 end
-
+end

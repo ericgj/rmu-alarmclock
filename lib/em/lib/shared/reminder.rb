@@ -8,7 +8,7 @@ class Reminder < Struct.new(:created_at, :start_at, :duration, :message, :timer_
             }
             
   def seconds_remaining_to_start
-    Time.now - start_at
+    start_at - Time.now
   end
   
   def seconds_remaining  
@@ -26,7 +26,7 @@ class Reminder < Struct.new(:created_at, :start_at, :duration, :message, :timer_
   end
   
   def initialize(hash = {})
-    hash = hash.merge(DEFAULT)
+    hash = DEFAULT.merge(hash)
     hash['created_at'] ||= Time.now
     hash['start_at']   ||= hash['created_at']
     hash.each_pair {|k,v| self.__send__("#{k}=".to_sym, v)}

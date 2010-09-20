@@ -1,19 +1,12 @@
-# TODO config APPENV with external file
-APPENV = { 'host' => 'localhost',
-           'port' => 5544,
-           'alarm-host' => 'localhost',
-           'alarm-port' => 5545
-         }
-         
 
 EM.run {
 
-  ReminderServer.start(APPENV['host'], APPENV['port']) do |server|
+  ReminderServer.start(APPENV.server.host, APPENV.server.port) do |server|
     
     server.each_reminder do |reminder|
     
       alarm = SimpleAlarmClient.connect(
-                APPENV['alarm-host'], APPENV['alarm-port'], 
+                APPENV.alarm.host, APPENV.alarm.port, 
                 reminder
               )
 

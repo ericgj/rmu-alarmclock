@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require File.join(File.dirname(__FILE__),'..','em_server')
+
+  APPENV = Remindr::Environment.load
+  APPENV.configure    # checks/dumps settings
+  
+  Signal.trap('INT') { puts "Exiting..."; EM.next_tick { EM.stop } }
+  
+  EM.run {
+    Remindr::Server.start(APPENV.server.host, APPENV.server.port) do |server|
+      
+      server.each_reminder do |reminder|
+      
+        # puts "Sending reminder to #{APPENV.alarm.host}:#{APPENV.alarm.port} now...\n  duration=#{reminder.duration}"
+        
+        alarm = EM::Protocols::JSON::Simple::Client.connect(
+                  APPENV.alarm.host, APPENV.alarm.port, 
+                  reminder
+                )
+      end
+      
+      server.unparseable_message do |cmd|
+        $stdout.print "Unparseable message received: `#{cmd}`\n"
+        $stdout.flush
+      end
+          
+      server.invalid_message do |msg|
+        $stdout.print "Invalid message received: `#{msg}`\n"
+        $stdout.flush
+      end
+      
+    end
+    
+    puts "Reminder server listening on #{APPENV.server.host}:#{APPENV.server.port}"
+  }

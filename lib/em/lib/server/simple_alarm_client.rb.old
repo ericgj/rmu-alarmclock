@@ -1,0 +1,20 @@
+require 'eventmachine'
+require 'json'
+require 'json/add/core'
+
+module SimpleAlarmClient
+  
+  def self.connect(host, port, reminder)
+    EM.connect(host, port, self, reminder)
+  end  
+  
+  def initialize(reminder)
+    @reminder = reminder
+  end
+  
+  def post_init
+    send_data @reminder.to_json + "\n\r"
+    close_connection_after_writing
+  end
+    
+end

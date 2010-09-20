@@ -1,5 +1,7 @@
-module ReminderServer
-  include EM::Protocols::JSON::Simple
+
+module Remindr
+module Server
+  include ::EM::Protocols::JSON::Simple
   
   def self.start(host, port, &blk)
     EM.start_server(host, port, self, &blk)
@@ -39,6 +41,6 @@ module ReminderServer
   end
   
 end
-
+end
 
 

@@ -23,6 +23,11 @@ namespace :test do
       Dir['spec/em/functional/**/*.rb'].each {|f| load f; puts "-----"}
     end
     
+    task :all => ['test:setup'] do
+      Rake::Task['test:em:unit'].execute
+      Rake::Task['test:em:functional'].execute
+    end
+    
   end
   
 end

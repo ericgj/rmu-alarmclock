@@ -2,8 +2,7 @@
 
 require File.join(File.dirname(__FILE__),'..','em_client')
 
-APPENV = Environment.load
+APPENV = Remindr::Environment.load
+APPENV.configure    # checks/dumps settings
 
-# daemonize alarm listener here if not started ?
-
-CLI.run(APPENV.host, APPENV.port, ARGV)
+Remindr::CLI.run(APPENV.server.host, APPENV.server.port, ARGV)
