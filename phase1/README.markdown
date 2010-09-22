@@ -20,10 +20,10 @@ Note the tests aren't that thorough (as of Sept 19), and need to be revised for 
 
 Right now the three parts of the app (the client, server, and alarm) are launched separately.  The plan is to daemonize the server and alarm components to make it easier.
 
-Open up three bash shells and go to the project root.  Enter these commands in two of the shells:
+Open up three bash shells and go to the project ('phase1') root.  Enter these commands in two of the shells:
 
-    lib/em/bin/remindrd
-    lib/em/bin/alarmd
+    bin/remindrd
+    bin/alarmd
     
 This will start up the reminder and alarm servers.  If it's the first time running, you will be prompted to set the configuration -- choose all default settings.  (It will save these to the file `~/.remindr` for the next time).
 
@@ -31,7 +31,7 @@ In the third shell, enter a command for setting the reminder. Right now the comm
 
 So to set a timer for two minutes with a message, enter:
 
-    lib/em/bin/remindr 120 We have liftoff!
+    bin/remindr 120 We have liftoff!
     
 In approximately two minutes, you should see the message appear in the `alarmd` shell, and it will attempt to play a sound.  (You need the `esound` client and server components installed to play the sound).
 
