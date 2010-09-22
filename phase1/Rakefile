@@ -1,0 +1,31 @@
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__))
+
+task :default => ['test:all']
+
+namespace :test do
+
+  task :setup do
+    require 'rubygems'
+    require 'bundler'
+    Bundler.setup(:test)
+    require 'bacon'
+    #Bacon.extend Bacon::TestUnitOutput
+    Bacon.summary_on_exit
+  end
+  
+  task :unit => ['test:setup'] do
+    puts "-----------------------\nUnit tests\n-----------------------"
+    Dir['spec/unit/**/*.rb'].each {|f| load f; puts "-----"}
+  end
+  
+  task :functional => ['test:setup'] do
+    puts "-----------------------\nFunctional tests\n-----------------------"
+    Dir['spec/functional/**/*.rb'].each {|f| load f; puts "-----"}
+  end
+  
+  task :all => ['test:setup'] do
+    Rake::Task['test:unit'].execute
+    Rake::Task['test:functional'].execute
+  end
+    
+end

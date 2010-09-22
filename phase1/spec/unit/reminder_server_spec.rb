@@ -1,21 +1,28 @@
-require File.join(File.dirname(__FILE__),'..','..','helper')
 require File.join(File.dirname(__FILE__),'..','helper')
 
-require 'lib/em/em_server'
+require 'em_server'
 
-# stub EM.add_timer
-module EventMachine
-  def self.add_timer(sec, &blk)
-    sleep(sec); blk.call
+
+describe Remindr::Server, 'receives valid command' do
+
+  before do
+    # stub EM.add_timer block
+    module EventMachine
+      def self.add_timer(sec, &blk)
+        sleep(sec); blk.call
+      end
+    end
   end
-end
-
-describe 'ReminderServer', 'receives valid command' do
-
+  
+  after do
+    # reset EventMachine
+    load 'eventmachine.rb'
+  end
+  
   it 'should throw each_reminder with reminder matching received message' do
 
     @reminder = Reminder.new({'start_at' => Time.now + 1})
-    EmSpecHelper.stub_connection(ReminderServer) do |conn|
+    EmSpecHelper.stub_connection(Remindr::Server) do |conn|
       conn.each_reminder do |r|
         r.should.not.be.nil
         r.each_pair {|k, v| v.should.eql @reminder[k]}
@@ -33,13 +40,13 @@ describe 'ReminderServer', 'receives valid command' do
    
 end
 
-describe 'ReminderServer', 'receives unparseable command' do
+describe Remindr::Server, 'receives unparseable command' do
 
   it 'should throw unparseable_command with message' do
     @reminder = {'hello' => 'world', 
                  'unparseable' => 'message', 
                  'created_at' => Time.now}.to_json
-    EmSpecHelper.stub_connection(ReminderServer) do |conn|
+    EmSpecHelper.stub_connection(Remindr::Server) do |conn|
       conn.each_reminder do |r|
         should.flunk "Command parsed: #{r.to_json}"
       end
@@ -55,11 +62,11 @@ describe 'ReminderServer', 'receives unparseable command' do
   
 end
 
-describe 'ReminderServer', 'receives invalid message format' do
+describe Remindr::Server, 'receives invalid message format' do
 
   it 'should throw invalid_message with message' do
     @reminder = "invalid message"
-    EmSpecHelper.stub_connection(ReminderServer) do |conn|
+    EmSpecHelper.stub_connection(Remindr::Server) do |conn|
       conn.each_reminder do |r|
         should.flunk "Command parsed: #{r.to_json}"
       end

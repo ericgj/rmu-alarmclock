@@ -1,10 +1,9 @@
-require File.join(File.dirname(__FILE__),'..','..','helper')
 require File.join(File.dirname(__FILE__),'..','helper')
 
-require 'lib/em/em_server'
+require 'em_server'
 
 
-describe 'ReminderServer', 'receives valid command' do
+describe Remindr::Server, 'receives valid command' do
 
   it 'should throw reminder near the specified time (3 sec)' do
     
@@ -15,7 +14,7 @@ describe 'ReminderServer', 'receives valid command' do
     @th = Thread.current
     EM.run {
     
-      ReminderServer.start(@host, @port) do |server|
+      Remindr::Server.start(@host, @port) do |server|
         
         server.each_reminder do |r|
           @th.wakeup

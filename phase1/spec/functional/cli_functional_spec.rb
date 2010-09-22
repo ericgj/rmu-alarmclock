@@ -1,11 +1,10 @@
-require File.join(File.dirname(__FILE__),'..','..','helper')
 require File.join(File.dirname(__FILE__),'..','helper')
 
-require 'lib/em/em_client'
+require 'em_client'
 
 # Note: actual EM reactor run, dummy server listening on socket (on separate thread)
 
-describe 'CLI', 'run' do
+describe Remindr::CLI, 'run' do
     
   describe 'when server is listening' do
     before do
@@ -22,7 +21,7 @@ describe 'CLI', 'run' do
     it 'should run without errors' do
       @client_thread = Thread.current
       EM.run {
-        EM.next_tick { CLI.run('localhost', 8888) }
+        EM.next_tick { Remindr::CLI.run('localhost', 8888) }
         @client_thread.wakeup
         true.should.eql true
       }

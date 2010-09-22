@@ -9,6 +9,11 @@ group :em do
   gem 'json'
 end
 
+group :thin do
+  gem 'thin'
+  gem 'sinatra'
+end
+
 group :test do
   gem 'bacon'
   gem 'mocha'

@@ -1,7 +1,6 @@
-require File.join(File.dirname(__FILE__),'..','..','helper')
 require File.join(File.dirname(__FILE__),'..','helper')
 
-require 'lib/em/em_client'
+require 'em_client'
 
 # Note: No EM reactor needed
 
@@ -27,7 +26,7 @@ end
 
 # Note: EM reactor stubbed
 
-describe 'CLI::ReminderClient' do
+describe Remindr::CLI::ReminderClient do
     
   before do
     @reminder = Reminder.new
@@ -35,7 +34,7 @@ describe 'CLI::ReminderClient' do
   
   it 'it should call send_data with the initial data in post_init' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, @reminder, 
+                Remindr::CLI::ReminderClient, @reminder, 
                 :stubs => Proc.new { |stub|
                              stub.expects(:send_data).with(@reminder.to_json + "\n\r").once
                            }
@@ -44,14 +43,14 @@ describe 'CLI::ReminderClient' do
   
   it 'it should call close_connection_after_writing in post_init' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, @reminder, 
+                Remindr::CLI::ReminderClient, @reminder, 
                 :stubs => :close_connection_after_writing
                )
   end
   
   it 'should stop the EM reactor when unbinding' do
     @subject = EmSpecHelper.stub_connection(
-                CLI::ReminderClient, @reminder
+                Remindr::CLI::ReminderClient, @reminder
                ) { |conn|  EM.expects(:stop); conn.unbind }
   end
   

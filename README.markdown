@@ -28,3 +28,12 @@ Examples:
     remindr 10:30 walk the dog          # reminder at specified time
     remindr --end 11pm-12:30pm meeting  # reminder at end of timed event
     
+
+## Project roadmap
+
+I am implementing a simplified app in two different ways and comparing them, before working in more detail on the alarm mechanism and client interface.  See the ROADMAP file for more details.
+
+### Note As of Sep 21, only the first phase (Eventmachine implementation) has been done.  
+
+I've put in the scaffolding for the second phase but not much else.
+
