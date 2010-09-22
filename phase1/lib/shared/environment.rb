@@ -71,7 +71,7 @@ class Environment < Struct.new(:server, :client, :alarm)
       unless self.alarm.sound
         print "> What is the alarm sound file? [lib/em/rsc/ringin.wav] "
         self.alarm.sound = gets.chomp
-        self.alarm.sound = 'lib/em/rsc/ringin.wav' if self.alarm.sound.empty?
+        self.alarm.sound = 'rsc/ringin.wav' if self.alarm.sound.empty?
         write_on_exit = true
       end
     end
