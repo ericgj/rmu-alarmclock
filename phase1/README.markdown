@@ -6,21 +6,21 @@ For explanation, see [http://github.com/ericgj/rmu-alarmclock/blob/master/ROADMA
 
 ### How to run the tests
 
-First make sure you have all the necessary gems: `bundle update`
+First make sure you have all the necessary gems.  Go to the project root (not 'phase1', but the level above). Run `bundle update`.
 
-Then from the project root, `rake test:em:all`. Or `rake test:em:unit` to run unit tests, `rake test:em:functional` for functional tests.
+Then from the 'phase1' root, `rake`. Or `rake test:unit` to run unit tests, `rake test:functional` for functional tests.
 
 For an explanation of what unit and functional tests are all about in the context of this project, see README files under spec/em/unit and spec/em/functional.
 
-Note the tests aren't that thorough (as of Sept 19), and need to be revised for the latest set of changes.
+Note the tests aren't that thorough (as of Sept 21).
 
 
 ### How to run the app 
-(as of Sept 19)
+(as of Sept 21)
 
 Right now the three parts of the app (the client, server, and alarm) are launched separately.  The plan is to daemonize the server and alarm components to make it easier.
 
-Open up three bash shells and go to the project ('phase1') root.  Enter these commands in two of the shells:
+Open up three bash shells and go to the 'phase1' root.  Enter these commands in two of the shells:
 
     bin/remindrd
     bin/alarmd
