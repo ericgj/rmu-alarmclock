@@ -1,0 +1,5 @@
+README.rdoc
+lib/**/*
+bin/*
+spec/**/*
+LICENSE
