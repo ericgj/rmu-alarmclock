@@ -16,7 +16,7 @@ Note the tests aren't that thorough (as of Sept 21).
 
 
 ### How to run the app 
-(as of Sept 21)
+(as of Sept 26)
 
 Right now the three parts of the app (the client, server, and alarm) are launched separately.  The plan is to daemonize the server and alarm components to make it easier.
 
@@ -34,4 +34,10 @@ So to set a timer for two minutes with a message, enter:
     bin/remindr 120 We have liftoff!
     
 In approximately two minutes, you should see the message appear in the `alarmd` shell, and it will attempt to play a sound.  (You need the `esound` client and server components installed to play the sound).
+
+Then after this, every 10 seconds the message and sound will appear.
+
+Eventually, the idea is that the user will be able to send a message back to the reminder server (perhaps through the alarm server), telling it to turn off the alarm or to snooze it.
+
+For now, the only way to stop the alarm is to stop the `alarmd` or `remindrd` processes.
 
