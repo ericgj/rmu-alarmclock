@@ -14,9 +14,9 @@ require File.join(File.dirname(__FILE__),'..','em_server')
       
         # puts "Sending reminder to #{APPENV.alarm.host}:#{APPENV.alarm.port} now...\n  duration=#{reminder.duration}"
         
-        alarm = Remindr::EMProtocols::SimpleJSONClient.connect(
-                  APPENV.alarm.host, APPENV.alarm.port, 
-                  reminder
+        alarm = Remindr::AlarmClient.trigger(
+                  reminder,
+                  :host => APPENV.alarm.host, :port => APPENV.alarm.port 
                 )
       end
       
