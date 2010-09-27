@@ -3,7 +3,7 @@
 
 This is the second stage of the project, re-implementing the alarm clock using a 'skinny daemon' as the server part (Sinatra app running on local Thin webserver).
 
-As of Sept 27, this stage is in its infancy.  Of the three parts of the application (client, server, and alarm), only the server part is sketched (`lib/remindrd`).
+As of Sept 27, this stage is in its infancy.  Of the three parts of the application (client, server, and alarm), only the server part is sketched (`lib/remindrd`).  There are no tests yet.
 
 ## Basic proposed flow through the system
 

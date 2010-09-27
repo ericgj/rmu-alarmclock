@@ -2,21 +2,18 @@
 
 This is the first stage of the project, the Eventmachine implementation.
 
-For explanation, see [http://github.com/ericgj/rmu-alarmclock/blob/master/ROADMAP.markdown](ROADMAP)
-
 ### How to run the tests
 
 First make sure you have all the necessary gems.  Go to the project root (not 'phase1', but the level above). Run `bundle update`.
 
 Then from the 'phase1' root, `rake`. Or `rake test:unit` to run unit tests, `rake test:functional` for functional tests.
 
-For an explanation of what unit and functional tests are all about in the context of this project, see README files under spec/em/unit and spec/em/functional.
+For an explanation of what unit and functional tests are all about in the context of this project, see README files under phase1/spec/unit and phase2/spec/functional.
 
-Note the tests aren't that thorough (as of Sept 21).
+Note the tests aren't that thorough (as of Sept 27).
 
 
 ### How to run the app 
-(as of Sept 26)
 
 Right now the three parts of the app (the client, server, and alarm) are launched separately.  The plan is to daemonize the server and alarm components to make it easier.
 
@@ -41,3 +38,20 @@ Eventually, the idea is that the user will be able to send a message back to the
 
 For now, the only way to stop the alarm is to stop the `alarmd` or `remindrd` processes.
 
+
+### How the code is organized
+
+bin             Scripts for the command-line client, server, and alarm
+lib
+  alarm         EM server for generating alarms
+  client        Command-line interface and EM client
+  em_protocols  Generic EM client and server modules
+  server        EM server for handling reminder requests
+  shared        Shared components used by all three parts of the app, including environment config and message formats.
+rsc             Sound files for alarm
+spec
+  functional    
+  integration   
+  shared
+  unit
+  
