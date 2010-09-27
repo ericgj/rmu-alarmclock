@@ -9,6 +9,8 @@ module Remindrd
         :port => 5578
       }
       
+      DEFAULT_REMINDER = Reminder.new
+      
       def self.set_protocol(name)
         include Object.const_get("Remindrd::EM::Protocols::#{name.to_s}")
       end
@@ -17,14 +19,16 @@ module Remindrd
         @each_response_callback = blk
       end
       
-      def self.trigger(message = nil, opts = {})
-        connection = EM.connect opts[:host], opts[:port], self, message, opts
+      def self.trigger(reminder = nil, opts = {})
+        reminder ||= DEFAULT_REMINDER
+        opts = DEFAULT_OPTIONS.merge(opts)
+        connection = ::EM.connect opts[:host], opts[:port], self, reminder, opts
         connection
       end
 
-      def initialize(message, opts = {})
-        @message = message || DEFAULT_MESSAGE
-        @opts = DEFAULT_OPTIONS.merge(opts)
+      def initialize(reminder, opts = {})
+        @reminder = reminder
+        @opts = opts
       end
       
       def post_init
@@ -32,7 +36,7 @@ module Remindrd
       end
       
       def connection_completed
-        send_data dump(@message)
+        send_data dump(@reminder) + "\n\r"
       end
 
       def unbind
@@ -50,14 +54,9 @@ module Remindrd
       end
       
       def snooze!
-        @state = :snooze
+        @state = :snoozed
       end
-      
-      def off?; @state == :off; end
-      
-      def snoozed?; @state == :snoozed; end
-      
-      
+            
       def receive_data data
         @buffer.extract(data).each do |line|
           @each_response_callback.call(load(line)) \
@@ -67,12 +66,12 @@ module Remindrd
       
       # overwrite in included protocol
       def load line
-        line
+        line.to_s
       end
       
       # overwrite in included protocol
       def dump msg
-        msg
+        msg.to_s
       end
       
       
@@ -84,7 +83,7 @@ module Remindrd
       end
       
       def schedule_reconnect secs
-        EM.add_timer(secs) do
+        ::EM.add_timer(secs) do
           reconnect @opts[:host], @opts[:port]
         end
       end

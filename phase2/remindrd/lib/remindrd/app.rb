@@ -21,14 +21,12 @@ module Remindrd
     end
 
     configure do
-      EM::Alarm.set_protocol :JSONSimple
+      Remindrd::EM::Alarm.set_protocol :SimpleJSON
       
       Reminder.alarm do |reminder|  
-        alarm = EM::Alarm.trigger(reminder, 
-                              :host => alarm_host, 
-                              :port => alarm_port)
-        alarm.each_response do |msg|
-          resp = ReminderResponse.new(msg)
+        alarm = Remindrd::EM::Alarm.trigger(reminder)
+        alarm.each_response do |hash|
+          resp = ReminderResponse.new(hash)
           alarm.snooze! if resp.snooze?
           alarm.off! if resp.off?
         end        
