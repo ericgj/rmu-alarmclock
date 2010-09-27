@@ -33,7 +33,7 @@ Examples:
 
 I am implementing a simplified app in two different ways and comparing them, before working in more detail on the alarm mechanism and client interface.  See the ROADMAP file for more details.
 
-### Note As of Sep 21, only the first phase (Eventmachine implementation) has been done.  
+### Note As of Sep 27, only the first phase (Eventmachine implementation) has been done.  
 
-I've put in the scaffolding for the second phase but not much else.
+I have started work on the second phase, but it is in its infancy.
 

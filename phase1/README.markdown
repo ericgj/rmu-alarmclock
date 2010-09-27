@@ -41,17 +41,17 @@ For now, the only way to stop the alarm is to stop the `alarmd` or `remindrd` pr
 
 ### How the code is organized
 
-bin             Scripts for the command-line client, server, and alarm
-lib
-  alarm         EM server for generating alarms
-  client        Command-line interface and EM client
-  em_protocols  Generic EM client and server modules
-  server        EM server for handling reminder requests
-  shared        Shared components used by all three parts of the app, including environment config and message formats.
-rsc             Sound files for alarm
-spec
-  functional    
-  integration   
-  shared
-  unit
-  
+    bin             Scripts for the command-line client, server, and alarm
+    lib
+      alarm         EM server for generating alarms
+      client        Command-line interface and EM client
+      em_protocols  Generic EM client and server modules
+      server        EM server for handling reminder requests
+      shared        Shared components used by all three parts of the app, including environment config and message formats.
+    rsc             Sound files for alarm
+    spec
+      functional    
+      integration   
+      shared
+      unit
+      
