@@ -47,3 +47,51 @@ At first I read the specs above as needing to _reopen connections within a singl
 
 It's surprising there is no async GNTP ruby library out there already.
 
+
+
+### A draft rubyish GNTP DSL:
+
+    app = GNTP::App.new('MyApp', :host => 'localhost')
+    
+    app.register do
+      icon 'http://www.example.com'
+
+      notification 'started', 'Your thing has started!' do |n|
+        n.header 'Data-Filename'
+        n.icon 'path/to/local/file.png'   #=> generates x-growl-resource
+        n.sticky
+        n.callback 'process', :type => 'confirm'
+      end
+      
+      notification 'finished', :enabled => true
+      
+      header 'X-Custom-Header', 'default value'
+    end
+    
+    
+    # notify with callback 
+    
+    resp =  app.notify('started', 'XYZ has started!') do |event|
+              event.result?(:clicked) { #do something }
+              event.result?(:closed, :timeout)  { #do something else }
+            end
+      
+    
+    # without callback
+    
+    resp2 = app.notify('finished', 'XYZ has finished!')
+    
+    
+    # OR defining callbacks from the app, route style
+    
+    app.callbacks do
+    
+      when_clicked '*/process/confirm' do |response|
+      end
+      
+      when_timeout do |response|  
+      end
+    
+    end
+    
+    
