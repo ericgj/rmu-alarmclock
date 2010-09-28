@@ -41,3 +41,5 @@ It's worth quoting this code as it summarizes the work that the server piece doe
 It's become increasingly obvious to me that the exact nature of the communication with the alarm mechanism has to be worked out before much else is done.  
 
 For instance if we are talking about something like Growl, how are callbacks implemented and is the communication synchronous or async?  Which side is expected to hang up? etc.
+
+
