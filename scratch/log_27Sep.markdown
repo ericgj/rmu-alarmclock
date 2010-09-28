@@ -41,10 +41,9 @@ Growl for Windows v2.0 does not yet support the 'Connection' header, socket reus
 So translating this to our situation, ignoring the bit about reusing sockets, it sounds like our alarm client needs to:
 
 1. convert the reminder to GNTP headers, including callback headers, and send_data to GNTP server;
-2. receive_data back from the GNTP server and forward any callback received (while connection still open); and close_connection when end of message reached.
-3. in unbind (?), start a new instance of itself as a server listening on the same (local) socket (get_sockname).  This will handle any (async) connections from the GNTP server representing callbacks.
+2. receive_data back from the GNTP server and forward any callback received; close_connection either if no callback was specified in the original request, or after a callback is received.
 
-Alternatively, since this could get quite hairy to do in a single Connection class, define two Connection classes, one for the client (1-2) and one for the server (3), which share the same receive_data method.  The client starts the server on unbind.
+At first I read the specs above as needing to _reopen connections within a single notification request_, ie. once for the synch response and once for the async, but now I see that connections are left open per request until the callback is received (if requested).  So it's fairly cut and dry.
 
 It's surprising there is no async GNTP ruby library out there already.
 
